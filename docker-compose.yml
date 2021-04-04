@@ -5,8 +5,7 @@ services:
     build:
       context:  ./services/flask
       dockerfile: Dockerfile
-    container_name: flask_api
-    # command: python manage.py run -h 0.0.0.0
+    container_name: flask_api # Do not use when in a swarm; cannot scale a service beyond 1 container if you have specified a custom name
     volumes:
       - ./services/flask/:/usr/src/app/
     ports: 

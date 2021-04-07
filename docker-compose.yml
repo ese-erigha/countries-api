@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  api:
+  flask_api:
     build:
       context:  ./services/flask
       dockerfile: Dockerfile
@@ -13,13 +13,19 @@ services:
     env_file:
       - ./.env.dev
     depends_on:
-      - db
+      - mongodb
+    networks:
+      - frontend
+      - backend
 
-  db:
-    container_name: postgres_db
-    image: postgres:12-alpine
+  mongodb:
+    container_name: mongo_db
+    image: mongo
+    command: mongod --auth
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - mongodb_data:/data/db
+    networks:
+      - backend
     env_file:
       - ./.env.dev.db
 
@@ -30,8 +36,18 @@ services:
       dockerfile: Dockerfile
     ports: 
       - "80:80"
+      - "443:443"
     depends_on:
-      - api
+      - flask_api
+    networks:
+      - frontend
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
 
 volumes:
-  postgres_data:
+  mongodb_data:
+

@@ -8,8 +8,6 @@ db = MongoEngine()
 def create_app():
     """Create Flask application."""
     app = Flask(__name__, instance_relative_config=False)
-    # app.config["MONGO_URI"] = "mongodb://localhost:27017/countries_api_dev"
-    # app.config.from_object('project.config.Config')
     app.config['MONGODB_SETTINGS'] = {
         'host':'mongodb://localhost/countries_api_dev'
     }

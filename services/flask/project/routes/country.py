@@ -8,12 +8,12 @@ country_blueprint = Blueprint(
 )
 
 @country_blueprint.route('/list', methods=['GET'])
-def getTodos():
+def getCountries():
     data = fetchCountries()
     return jsonify(status=True, data=data)
 
 @country_blueprint.route('/create', methods=['POST'])
-def createTodo():
+def createCountry():
     data = request.get_json(force=True)
     addCountry(data)
     return jsonify(

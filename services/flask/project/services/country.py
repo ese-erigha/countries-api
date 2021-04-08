@@ -1,8 +1,8 @@
-from project import mongo
+from project.models.country import Country
 
 def fetchCountries():
-    _countries = mongo.db.country.find()
-    return _countries
+    countries = Country.objects().to_json()
+    return countries
 
 def addCountry(data):
-    mongo.db.todo.insert_one(data)
+    Country(**data).save()

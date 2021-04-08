@@ -2,3 +2,4 @@ Flask==1.1.2
 gunicorn==20.0.4
 Flask-PyMongo==2.2.0
 requests==2.20.1
+flask-mongoengine==1.0.0

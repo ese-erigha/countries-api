@@ -1,4 +1,6 @@
-from project import db
+from mongoengine import Document
+from mongoengine.fields import StringField
 
-class Todo(db.Document):
-    todo = db.StringField(required=True)
+class TodoModel(Document):
+    meta = {'collection': 'todo'}
+    todo = StringField(required=True)

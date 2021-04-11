@@ -1,13 +1,14 @@
-from project import db
+from mongoengine import DynamicEmbeddedDocument
+from mongoengine.fields import StringField
 
-class Translation(db.DynamicEmbeddedDocument):
-    br = db.StringField()
-    de = db.StringField()
-    es = db.StringField()
-    fa = db.StringField()
-    fr = db.StringField()
-    hr = db.StringField()
-    it = db.StringField()
-    ja = db.StringField()
-    nl = db.StringField()
-    pt = db.StringField()
+class TranslationModel(DynamicEmbeddedDocument):
+    br = StringField()
+    de = StringField()
+    es = StringField()
+    fa = StringField()
+    fr = StringField()
+    hr = StringField()
+    it = StringField()
+    ja = StringField()
+    nl = StringField()
+    pt = StringField()

@@ -1,31 +1,33 @@
-from project import db
-from .currency import Currency
-from .language import Language
-from .regionBloc import RegionBloc
-from .translation  import Translation
+from mongoengine import Document
+from mongoengine.fields import StringField, ListField, EmbeddedDocumentListField, IntField, DecimalField, FloatField
+from .currency import CurrencyModel
+from .language import LanguageModel
+from .regionBloc import RegionBlocModel
+from .translation  import TranslationModel
 
-class Country(db.Document):
-    alpha2Code = db.StringField(required=True, unique=True)
-    alpha3Code = db.StringField(required=True, unique=True)
-    altSpellings = db.ListField(db.StringField())
-    area = db.IntField()
-    borders = db.ListField(db.StringField())
-    callingCodes = db.ListField(db.StringField())
-    capital = db.StringField(required=True)
-    cioc = db.StringField()
-    currencies = db.EmbeddedDocumentListField(Currency)
-    demonym = db.StringField()
-    flag = db.StringField()
-    gini = db.FloatField()
-    languages = db.EmbeddedDocumentListField(Language)
-    latlng = db.ListField(db.DecimalField())
-    name = db.StringField()
-    nativeName = db.StringField()
-    numericCode = db.StringField()
-    population = db.DecimalField()
-    region = db.StringField()
-    regionalBlocs = db.EmbeddedDocumentListField(RegionBloc)
-    subregion = db.StringField()
-    timezones = db.ListField(db.StringField())
-    topLevelDomain = db.ListField(db.StringField())
-    translations = db.EmbeddedDocumentListField(Translation)
+class CountryModel(Document):
+    meta = {'collection': 'country'}
+    alpha2Code = StringField(required=True, unique=True)
+    alpha3Code = StringField(required=True, unique=True)
+    altSpellings = ListField(StringField())
+    area = IntField()
+    borders = ListField(StringField())
+    callingCodes = ListField(StringField())
+    capital = StringField(required=True)
+    cioc = StringField()
+    currencies = EmbeddedDocumentListField(CurrencyModel)
+    demonym = StringField()
+    flag = StringField()
+    gini = FloatField()
+    languages = EmbeddedDocumentListField(LanguageModel)
+    latlng = ListField(DecimalField())
+    name = StringField()
+    nativeName = StringField()
+    numericCode = StringField()
+    population = DecimalField()
+    region = StringField()
+    regionalBlocs = EmbeddedDocumentListField(RegionBlocModel)
+    subregion = StringField()
+    timezones = ListField(StringField())
+    topLevelDomain = ListField(StringField())
+    translations = EmbeddedDocumentListField(TranslationModel)

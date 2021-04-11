@@ -1,7 +1,8 @@
-from project import db
+from mongoengine import DynamicEmbeddedDocument
+from mongoengine.fields import StringField, ListField
 
-class RegionBloc(db.DynamicEmbeddedDocument):
-    acronym = db.StringField()
-    name = db.StringField()
-    otherAcronyms = db.ListField(db.StringField())
-    otherNames = db.ListField(db.StringField())
+class RegionBlocModel(DynamicEmbeddedDocument):
+    acronym = StringField()
+    name = StringField()
+    otherAcronyms = ListField(StringField())
+    otherNames = ListField(StringField())

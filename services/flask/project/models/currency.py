@@ -1,6 +1,7 @@
-from project import db
+from mongoengine import DynamicEmbeddedDocument
+from mongoengine.fields import StringField
 
-class Currency(db.DynamicEmbeddedDocument):
-    code = db.StringField(required=True)
-    name = db.StringField(required=True)
-    symbol = db.StringField()
+class CurrencyModel(DynamicEmbeddedDocument):
+    code = StringField(required=True)
+    name = StringField(required=True)
+    symbol = StringField()

@@ -1,7 +1,8 @@
-from project import db
+from mongoengine import DynamicEmbeddedDocument
+from mongoengine.fields import StringField
 
-class Language(db.DynamicEmbeddedDocument):
-    iso639_1 = db.StringField()
-    iso639_2 = db.StringField()
-    name = db.StringField()
-    nativeName = db.StringField()
+class LanguageModel(DynamicEmbeddedDocument):
+    iso639_1 = StringField()
+    iso639_2 = StringField()
+    name = StringField()
+    nativeName = StringField()

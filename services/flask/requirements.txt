@@ -5,3 +5,4 @@ flask-mongoengine==1.0.0
 flask-graphql==2.0.1
 graphene-mongo==0.2.13
 promise==2.3
+mongoengine-goodjson==1.1.8

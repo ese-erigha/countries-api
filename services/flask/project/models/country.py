@@ -1,11 +1,12 @@
-from mongoengine import Document
+# from mongoengine import Document
 from mongoengine.fields import StringField, ListField, EmbeddedDocumentListField, IntField, DecimalField, FloatField
+import mongoengine_goodjson as gj
 from .currency import CurrencyModel
 from .language import LanguageModel
 from .regionBloc import RegionBlocModel
 from .translation  import TranslationModel
 
-class CountryModel(Document):
+class CountryModel(gj.Document):
     meta = {'collection': 'country'}
     alpha2Code = StringField(required=True, unique=True)
     alpha3Code = StringField(required=True, unique=True)

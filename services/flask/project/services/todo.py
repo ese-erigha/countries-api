@@ -1,11 +1,10 @@
 from project.models.todo import TodoModel
 
-def fetchTodos():
-    # todos = Todo.objects().to_json()
-    todos = TodoModel.objects()
+def fetch_todos():
+    todos = TodoModel.objects().to_json()
     return todos
 
-def insertTodo(data):
+def save_todo(data):
     todo = TodoModel(**data).save()
-    return todo
+    return todo.to_json()
 

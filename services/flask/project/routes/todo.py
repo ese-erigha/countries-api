@@ -1,6 +1,6 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, Response
 from flask import current_app as app
-from project.services.todo import insertTodo, fetchTodos 
+from project.services.todo import save_todo, fetch_todos 
 
 # Blueprint Configuration
 todo_blueprint = Blueprint(
@@ -8,16 +8,12 @@ todo_blueprint = Blueprint(
 )
 
 @todo_blueprint.route('/list', methods=['GET'])
-def getTodos():
-    data = fetchTodos()
-    return jsonify(status=True, data=data),200
+def get_todos():
+    todos = fetch_todos()
+    return Response(todos,mimetype="application/json", status=200)
 
 @todo_blueprint.route('/create', methods=['POST'])
-def createTodo():
+def create_todo():
     data = request.get_json(force=True)
-    todo = insertTodo(data)
-    return jsonify(
-        status=True,
-        todo=todo,
-        message='To-do saved successfully!'
-    ),201
+    todo = save_todo(data)
+    return Response(todo,mimetype="application/json", status=201)

@@ -1,8 +1,9 @@
 from project.models.country import CountryModel
 
-def fetchCountries():
+def fetch_countries():
     countries = CountryModel.objects().to_json()
     return countries
 
-def addCountry(data):
-    CountryModel(**data).save()
+def save_country(data):
+    country = CountryModel(**data).save()
+    return country.to_json()

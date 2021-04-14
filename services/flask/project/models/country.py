@@ -1,4 +1,3 @@
-# from mongoengine import Document
 from mongoengine.fields import StringField, ListField, EmbeddedDocumentListField, IntField, DecimalField, FloatField
 import mongoengine_goodjson as gj
 from .currency import CurrencyModel

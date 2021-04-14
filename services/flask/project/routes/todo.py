@@ -1,6 +1,8 @@
+import json
 from flask import Blueprint, jsonify, request, Response
 from flask import current_app as app
-from project.services.todo import save_todo, fetch_todos 
+from project.services.todo import save_todo, fetch_todos
+from project.elasticSearch.todo import index_todo 
 
 # Blueprint Configuration
 todo_blueprint = Blueprint(
@@ -16,4 +18,6 @@ def get_todos():
 def create_todo():
     data = request.get_json(force=True)
     todo = save_todo(data)
+    todo_dict = json.loads(todo)
+    index_todo(todo_dict)
     return Response(todo,mimetype="application/json", status=201)

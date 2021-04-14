@@ -2,11 +2,25 @@ from flask import Flask
 # from flask_mongoengine import MongoEngine
 from mongoengine import connect
 from flask_graphql import GraphQLView
+from elasticsearch_dsl.connections import connections
+from elasticsearch_dsl import Index
+from .elasticSearch    import todo as todoES
 from .graphql.schema import schema
 
 def create_app():
     """Instantiate database"""
-    connect(db="countries_api_dev", host="localhost")
+    db = connect(db="countries_api_dev", host="localhost")
+
+    """Drop all collections"""
+    try:
+        db.drop_database("countries_api_dev")
+    except BaseException as err:
+        print(err)
+
+    """Connect to ElasticSearch"""
+    connections.create_connection(hosts=['localhost'])
+
+    todoES.init()
 
     """Create Flask application."""
     app = Flask(__name__, instance_relative_config=False)

@@ -12,6 +12,7 @@ def create_app():
     db = connect(db="countries_api_dev", host="localhost")
 
     """Drop all collections"""
+    # https://stackoverflow.com/questions/15886469/dropping-all-collections-in-mongoengine
     try:
         db.drop_database("countries_api_dev")
     except BaseException as err:

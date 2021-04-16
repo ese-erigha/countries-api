@@ -3,7 +3,8 @@ import mongoengine_goodjson as gj
 from .currency import CurrencyModel
 from .language import LanguageModel
 from .regionBloc import RegionBlocModel
-from .translation  import TranslationModel
+from .translation import TranslationModel
+
 
 class CountryModel(gj.Document):
     meta = {'collection': 'country'}

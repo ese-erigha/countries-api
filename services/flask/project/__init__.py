@@ -1,11 +1,10 @@
 from flask import Flask
-# from flask_mongoengine import MongoEngine
 from mongoengine import connect
 from flask_graphql import GraphQLView
 from elasticsearch_dsl.connections import connections
-from elasticsearch_dsl import Index
-from .elasticSearch    import todo as todoES
+from .elasticSearch import todo as todo_es
 from .graphql.schema import schema
+
 
 def create_app():
     """Instantiate database"""
@@ -21,15 +20,15 @@ def create_app():
     """Connect to ElasticSearch"""
     connections.create_connection(hosts=['localhost'])
 
-    todoES.init()
+    todo_es.init()
 
     """Create Flask application."""
     app = Flask(__name__, instance_relative_config=False)
     app.debug = True
 
     app.add_url_rule(
-    '/graphql',
-    view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True)
+        '/graphql',
+        view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True)
     )
 
     with app.app_context():

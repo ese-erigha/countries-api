@@ -1,6 +1,7 @@
 from mongoengine import DynamicEmbeddedDocument
 from mongoengine.fields import StringField
 
+
 class TranslationModel(DynamicEmbeddedDocument):
     br = StringField()
     de = StringField()

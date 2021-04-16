@@ -1,24 +1,24 @@
-from elasticsearch_dsl import Document, Date, Integer, Keyword, Text, Index
+from elasticsearch_dsl import Document, Text, Index
 
-index = Index('todo')
+todoIndex = Index('todo')
 
-@index.document
+
+@todoIndex.document
 class TodoESModel(Document):
     todo = Text()
 
 
 def init():
-  
-  if index.exists() is True:
-    index.delete()
+    todoIndex.delete(ignore=404)
+    # if index.exists() is True:
+    #     index.delete()
 
-  index.settings(number_of_shards=1)
-  index.create()
-
+    todoIndex.settings(number_of_shards=1)
+    todoIndex.create()
 
 
 def index_todo(data):
-    TodoESModel(meta={'id':data.get('id')}, todo = data.get('todo')).save()
-    
+    TodoESModel(meta={'id': data.get('id')}, todo=data.get('todo')).save()
+
     # refresh index manually to make changes live
-    index.refresh()
+    todoIndex.refresh()

@@ -3,6 +3,6 @@ from mongoengine.fields import StringField
 
 
 class CurrencyModel(DynamicEmbeddedDocument):
-    code = StringField(required=True)
-    name = StringField(required=True)
+    code = StringField()
+    name = StringField()
     symbol = StringField()

@@ -1,5 +1,7 @@
+import json
 from flask import Blueprint, request, Response
 from project.services.country import save_country, fetch_countries
+from project.elasticSearch.country import index_country
 
 # Blueprint Configuration
 country_blueprint = Blueprint(
@@ -17,4 +19,6 @@ def get_countries():
 def create_country():
     data = request.get_json(force=True)
     country = save_country(data)
+    country_dict = json.loads(country)
+    index_country(country_dict)
     return Response(country, mimetype="application/json", status=201)

@@ -24,7 +24,7 @@ def init():
     countryIndex.create()
 
 
-def index_todo(data):
+def index_country(data):
     CountryESModel(
         meta={'id': data['id']},
         name=data['name'],

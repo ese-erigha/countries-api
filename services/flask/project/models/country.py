@@ -1,4 +1,4 @@
-from mongoengine.fields import StringField, ListField, EmbeddedDocumentListField, IntField, DecimalField, FloatField
+from mongoengine.fields import StringField, ListField, EmbeddedDocumentListField, EmbeddedDocumentField, IntField, DecimalField, FloatField
 import mongoengine_goodjson as gj
 from .currency import CurrencyModel
 from .language import LanguageModel
@@ -31,4 +31,4 @@ class CountryModel(gj.Document):
     subregion = StringField()
     timezones = ListField(StringField())
     topLevelDomain = ListField(StringField())
-    translations = EmbeddedDocumentListField(TranslationModel)
+    translations = EmbeddedDocumentField(TranslationModel)

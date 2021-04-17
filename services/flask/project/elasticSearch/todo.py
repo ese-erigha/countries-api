@@ -10,8 +10,6 @@ class TodoESModel(Document):
 
 def init():
     todoIndex.delete(ignore=404)
-    # if index.exists() is True:
-    #     index.delete()
 
     todoIndex.settings(number_of_shards=1)
     todoIndex.create()

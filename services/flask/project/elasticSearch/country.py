@@ -16,10 +16,6 @@ def init():
     # delete the index, ignore if it doesn't exist
     countryIndex.delete(ignore=404)
 
-    # if countryIndex.exists() is True:
-
-    #     countryIndex.delete()
-
     countryIndex.settings(number_of_shards=1)
     countryIndex.create()
 

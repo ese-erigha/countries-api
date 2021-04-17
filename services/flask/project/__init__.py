@@ -12,17 +12,17 @@ def create_app():
 
     """Drop all collections"""
     # https://stackoverflow.com/questions/15886469/dropping-all-collections-in-mongoengine
-    try:
-        db.drop_database("countries_api_dev")
-    except BaseException as err:
-        print(err)
+    # try:
+    #     db.drop_database("countries_api_dev")
+    # except BaseException as err:
+    #     print(err)
 
     """Connect to ElasticSearch"""
     connections.create_connection(hosts=['localhost'])
 
     # initialize elastic search
-    todo_es.init()
-    country_es.init()
+    # todo_es.init()
+    # country_es.init()
 
     """Create Flask application."""
     app = Flask(__name__, instance_relative_config=False)

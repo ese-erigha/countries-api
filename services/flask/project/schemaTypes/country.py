@@ -9,7 +9,7 @@ from project.models.country import CountryModel
 class CountryLoader(DataLoader):
     @classmethod
     def batch_load_fn(cls, keys):
-        countries = {country.alpha2Code: country for country in CountryModel.objects(alpha2Code__in=keys)}
+        countries = {country.alpha3Code: country for country in CountryModel.objects(alpha3Code__in=keys)}
         return Promise.resolve([countries.get(key) for key in keys])
 
 
@@ -24,5 +24,6 @@ class Country(MongoengineObjectType):
         super().__init__(args, kwargs)
         self.borders = None
 
-    def resolve_border_countries(self):
+    def resolve_border_countries(self, info):
         return CountryLoader().load_many(self.borders)
+

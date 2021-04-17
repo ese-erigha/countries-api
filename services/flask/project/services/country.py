@@ -7,7 +7,6 @@ from project.models.translation import TranslationModel
 
 def map_field_list_to_dict(field_list, data):
     country_dict = {}
-    print(data)
     for field in field_list:
         if data[field] is not None:
             country_dict[field] = data[field]

@@ -18,12 +18,11 @@ class Country(MongoengineObjectType):
         model = CountryModel
         interfaces = (Node,)
 
-    border_countries = graphene.List(lambda: Country)
+    borders = graphene.List(lambda: Country)
 
     def __init__(self, *args, **kwargs):
         super().__init__(args, kwargs)
         self.borders = None
 
-    def resolve_border_countries(self, info):
+    def resolve_borders(self, _info):
         return CountryLoader().load_many(self.borders)
-

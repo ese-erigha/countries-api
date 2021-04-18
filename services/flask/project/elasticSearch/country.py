@@ -1,10 +1,12 @@
 from elasticsearch_dsl import Document, Long, Keyword, Text, Index
+from elasticsearch_dsl.query import Match
 
 countryIndex = Index('country')
 
 
 @countryIndex.document
 class CountryESModel(Document):
+    id = Keyword()
     name = Text(fields={'raw': Keyword()})
     alpha2Code = Keyword()
     capital = Text()
@@ -23,6 +25,7 @@ def init():
 def index_country(data):
     CountryESModel(
         meta={'id': data['id']},
+        id=data['id'],
         name=data['name'],
         alpha2Code=data['alpha2Code'],
         capital=data['capital'],
@@ -32,3 +35,40 @@ def index_country(data):
 
     # refresh index manually to make changes live
     countryIndex.refresh()
+
+
+class CountrySearch:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def compute_start_index(cls, offset):
+        start_index = 0
+        if offset is not None:
+            try:
+                start_index = int(offset)
+            except ValueError:
+                print("Tried to parse an invalid string to int")
+
+        return start_index
+
+    @classmethod
+    def compute_limit(cls, start_index):
+        page_size = 2
+        return page_size + start_index
+
+    @classmethod
+    def search_by_name(cls, name, offset):
+        start_index = cls.compute_start_index(offset)
+        s = CountryESModel.search()
+        query = Match(name={"query": name, "fuzziness": "AUTO"})
+        results = s[start_index:12].query(query).execute()
+        return [country.to_dict() for country in results]
+
+    @classmethod
+    def search_by_region(cls, name, offset):
+        start_index = cls.compute_start_index(offset)
+        limit = cls.compute_limit(start_index)
+        s = CountryESModel.search()
+        results = s[start_index:limit].query("term", region=name).execute()
+        return [country.to_dict() for country in results]

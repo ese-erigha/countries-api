@@ -1,4 +1,5 @@
-from mongoengine.fields import StringField, ListField, EmbeddedDocumentListField, EmbeddedDocumentField, IntField, DecimalField, FloatField
+from mongoengine.fields import StringField, ListField, EmbeddedDocumentListField, \
+    EmbeddedDocumentField, IntField, DecimalField, FloatField
 import mongoengine_goodjson as gj
 from .currency import CurrencyModel
 from .language import LanguageModel
@@ -9,7 +10,7 @@ from .translation import TranslationModel
 class CountryModel(gj.Document):
     meta = {'collection': 'country'}
     alpha2Code = StringField(required=True, unique=True)
-    alpha3Code = StringField(required=True, unique=True)
+    alpha3Code = StringField()
     altSpellings = ListField(StringField())
     area = IntField()
     borders = ListField(StringField())

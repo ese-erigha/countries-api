@@ -1,5 +1,5 @@
 from elasticsearch_dsl import Document, Long, Keyword, Text, Index
-from elasticsearch_dsl.query import Match, MatchPhrasePrefix
+from elasticsearch_dsl.query import Match, MatchPhrasePrefix, Term, Bool, MultiMatch
 
 countryIndex = Index('country')
 
@@ -42,35 +42,49 @@ class CountrySearch:
         pass
 
     @classmethod
-    def compute_start_index(cls, offset):
-        start_index = 0
-        if offset is not None:
-            try:
-                start_index = int(offset)
-            except ValueError:
-                print("Tried to parse an invalid string to int")
-
-        return start_index
-
-    @classmethod
     def compute_limit(cls, start_index):
-        page_size = 5
+        page_size = 10
         return page_size + start_index
 
     @classmethod
-    def search_by_name(cls, name, offset):
-        start_index = cls.compute_start_index(offset)
+    def search(cls, searchInput):
+        name = searchInput.get('name')  # optional field
+        region = searchInput.get('region')  # optional field
+        start_index = searchInput.get('offset')
         limit = cls.compute_limit(start_index)
+        query = ''
+        if name and region is None:
+            query = MatchPhrasePrefix(name={"query": name})
+
+        if name is None and region:
+            query = Term(region={"value": region})
+
+        if name and region:
+            query = Bool(
+                # should=[{"match": {"name": {"query": name, "fuzziness": "AUTO"}}}],
+                # should=[Match(name={"query": name, "fuzziness": "AUTO"})],
+                must=[MatchPhrasePrefix(name={"query": name})],
+                filter={"term": {"region": region}},
+            )
+
         s = CountryESModel.search()
-        # query = Match(name={"query": name, "fuzziness": "AUTO"})
-        query = MatchPhrasePrefix(name={"query": name})
         results = s[start_index:limit].query(query).execute()
         return [country.to_dict() for country in results]
 
-    @classmethod
-    def search_by_region(cls, name, offset):
-        start_index = cls.compute_start_index(offset)
-        limit = cls.compute_limit(start_index)
-        s = CountryESModel.search()
-        results = s[start_index:limit].query("term", region=name).execute()
-        return [country.to_dict() for country in results]
+    # @classmethod
+    # def search_by_name(cls, name, offset):
+    #     start_index = cls.compute_start_index(offset)
+    #     limit = cls.compute_limit(start_index)
+    #     s = CountryESModel.search()
+    #     # query = Match(name={"query": name, "fuzziness": "AUTO"})
+    #     query = MatchPhrasePrefix(name={"query": name})
+    #     results = s[start_index:limit].query(query).execute()
+    #     return [country.to_dict() for country in results]
+    #
+    # @classmethod
+    # def search_by_region(cls, name, offset):
+    #     start_index = cls.compute_start_index(offset)
+    #     limit = cls.compute_limit(start_index)
+    #     s = CountryESModel.search()
+    #     results = s[start_index:limit].query("term", region=name).execute()
+    #     return [country.to_dict() for country in results]

@@ -7,25 +7,20 @@ from project.graphql.mutations.todo import CreateTodoMutation
 from project.elasticSearch.country import CountrySearch
 
 
+class CountryInput(graphene.InputObjectType):
+    name = graphene.String(required=False)
+    region = graphene.String(required=False)
+    offset = graphene.Int(required=False, default_value=0)
+
+
 class Query(graphene.ObjectType):
     node = Node.Field()
-    countries_in_region = graphene.List(MappedCountry,
-                                        region=graphene.String(),
-                                        offset=graphene.Int()
-                                        )
-    countries_by_name = graphene.List(MappedCountry,
-                                      name=graphene.String(),
-                                      offset=graphene.Int()
-                                      )
+    countries = graphene.List(MappedCountry, countryInput=CountryInput(required=True))
     country = graphene.Field(Country, id=graphene.String(required=True))
 
     @staticmethod
-    def resolve_countries_in_region(_, _info, region, offset):
-        return CountrySearch().search_by_region(region, offset)
-
-    @staticmethod
-    def resolve_countries_by_name(_, _info, name, offset):
-        return CountrySearch().search_by_name(name, offset)
+    def resolve_countries(_, _info, countryInput):
+        return CountrySearch().search(countryInput)
 
     @staticmethod
     def resolve_country(_, _info, id):

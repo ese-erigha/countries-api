@@ -3,7 +3,6 @@ from graphene.relay import Node
 from project.models.country import CountryModel
 from project.schemaTypes.country import Country
 from project.dto.country import MappedCountry
-from project.graphql.mutations.todo import CreateTodoMutation
 from project.elasticSearch.country import CountrySearch
 
 
@@ -27,8 +26,4 @@ class Query(graphene.ObjectType):
         return CountryModel.objects().get(id=id)
 
 
-class Mutation(graphene.ObjectType):
-    createTodo = CreateTodoMutation.Field()
-
-
-schema = graphene.Schema(query=Query, mutation=Mutation, types=[MappedCountry, Country])
+schema = graphene.Schema(query=Query, types=[MappedCountry, Country])

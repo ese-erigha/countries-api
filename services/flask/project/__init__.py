@@ -2,7 +2,7 @@ from flask import Flask
 from mongoengine import connect
 from flask_graphql import GraphQLView
 from elasticsearch_dsl.connections import connections
-from .elasticSearch import todo as todo_es, country as country_es
+from .elasticSearch import country as country_es
 from .graphql.schema import schema
 
 
@@ -21,7 +21,6 @@ def create_app():
     connections.create_connection(hosts=['localhost'])
 
     # initialize elastic search
-    # todo_es.init()
     # country_es.init()
 
     """Create Flask application."""
@@ -36,10 +35,8 @@ def create_app():
     with app.app_context():
         # Include our Routes
         from .routes.country import country_blueprint
-        from .routes.todo import todo_blueprint
 
         # Register Blueprints
         app.register_blueprint(country_blueprint, url_prefix='/country')
-        app.register_blueprint(todo_blueprint, url_prefix='/todo')
 
         return app

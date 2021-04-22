@@ -1,5 +1,5 @@
 from elasticsearch_dsl import Document, Long, Keyword, Text, Index
-from elasticsearch_dsl.query import Match, MatchPhrasePrefix, Term, Bool, MultiMatch
+from elasticsearch_dsl.query import MatchPhrasePrefix, Term, Bool
 
 countryIndex = Index('country')
 
@@ -70,21 +70,3 @@ class CountrySearch:
         s = CountryESModel.search()
         results = s[start_index:limit].query(query).execute()
         return [country.to_dict() for country in results]
-
-    # @classmethod
-    # def search_by_name(cls, name, offset):
-    #     start_index = cls.compute_start_index(offset)
-    #     limit = cls.compute_limit(start_index)
-    #     s = CountryESModel.search()
-    #     # query = Match(name={"query": name, "fuzziness": "AUTO"})
-    #     query = MatchPhrasePrefix(name={"query": name})
-    #     results = s[start_index:limit].query(query).execute()
-    #     return [country.to_dict() for country in results]
-    #
-    # @classmethod
-    # def search_by_region(cls, name, offset):
-    #     start_index = cls.compute_start_index(offset)
-    #     limit = cls.compute_limit(start_index)
-    #     s = CountryESModel.search()
-    #     results = s[start_index:limit].query("term", region=name).execute()
-    #     return [country.to_dict() for country in results]

@@ -6,6 +6,10 @@ from graphene_mongo import MongoengineObjectType
 from project.models.country import CountryModel
 
 
+class CountryNotFound(graphene.ObjectType):
+    message = graphene.String()
+
+
 class CountryLoader(DataLoader):
     @classmethod
     def batch_load_fn(cls, keys):
@@ -26,3 +30,8 @@ class Country(MongoengineObjectType):
 
     def resolve_borders(self, _info):
         return CountryLoader().load_many(self.borders)
+
+
+class CountryResponse(graphene.Union):
+    class Meta:
+        types = (Country, CountryNotFound)

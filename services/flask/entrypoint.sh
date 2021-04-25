@@ -1,16 +1,18 @@
 #!/bin/sh
 
-if [ "$DATABASE" = "postgres" ]
-then
-    echo "Waiting for postgres..."
 
-    while ! nc -z $SQL_HOST $SQL_PORT; do
-      sleep 0.1
-    done
 
-    echo "PostgreSQL started"
-fi
 
-python manage.py create_db
+echo "Waiting for elasticsearch..."
 
+health='down'
+
+until [ "$health" = 'green' ]; do
+  health="$(curl -fsSL "$ELASTICSEARCH/_cat/health?h=status")"
+  health="$(echo "$health" | sed -r 's/^[[:space:]]+|[[:space:]]+$//g')" # trim whitespace (otherwise we'll have "green ")
+  >&2 echo "Elastic Search is unavailable - sleeping"
+  sleep 1
+done
+
+>&2 echo "Elastic Search is up"
 exec "$@"

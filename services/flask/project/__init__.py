@@ -2,7 +2,6 @@ from flask import Flask
 from mongoengine import connect
 from flask_graphql import GraphQLView
 from elasticsearch_dsl.connections import connections
-from .elasticSearch import country as country_es
 from .graphql.schema import schema
 
 
@@ -21,9 +20,6 @@ def create_app():
     """Connect to ElasticSearch"""
     # connections.create_connection(hosts=['localhost'])
     connections.create_connection(hosts=['elasticsearch'])
-
-    # initialize elastic search
-    # country_es.init()
 
     """Create Flask application."""
     app = Flask(__name__, instance_relative_config=False)

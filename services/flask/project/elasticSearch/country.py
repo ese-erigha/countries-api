@@ -1,6 +1,7 @@
+# import requests
 from elasticsearch_dsl import Document, Long, Keyword, Text, Index
 from elasticsearch_dsl.query import MatchPhrasePrefix, Term, Bool
-import pdb
+# import pdb
 
 countryIndex = Index('country')
 
@@ -15,11 +16,11 @@ class CountryESModel(Document):
     region = Keyword()
 
 
-def init():
+def init_index():
 
     # delete the index, ignore if it doesn't exist
     countryIndex.delete(ignore=404)
-    pdb.set_trace()
+    # pdb.set_trace()
 
     countryIndex.settings(number_of_shards=1)
     countryIndex.create()
@@ -72,5 +73,4 @@ class CountrySearch:
 
         s = CountryESModel.search()
         results = s[start_index:limit].query(query).execute()
-        pdb.set_trace()
         return [country.to_dict() for country in results]

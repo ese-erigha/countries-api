@@ -1,7 +1,8 @@
 import json
-from flask import Blueprint, request, Response
+import requests
+from flask import Blueprint, jsonify, request
 from project.services.country import save_country
-from project.elasticSearch.country import index_country
+from project.elasticSearch.country import index_country, init_index as country_indexer_init
 
 # Blueprint Configuration
 country_blueprint = Blueprint(
@@ -9,28 +10,39 @@ country_blueprint = Blueprint(
 )
 
 
-# @country_blueprint.route('/list', methods=['GET'])
-# def get_countries():
-#     countries = fetch_countries()
-#     return Response(countries, mimetype="application/json", status=200)
-
-
-@country_blueprint.route('/create', methods=['POST'])
-def create_country():
-    data = request.get_json(force=True)
-    country = save_country(data)
+def create_country(country_data):
+    country = save_country(country_data)
     country_dict = json.loads(country)
     index_country(country_dict)
-    return Response(country, mimetype="application/json", status=201)
 
 
-# @country_blueprint.route('/search/<name>/<offset>', methods=['GET'])
-# def search_by_name(name, offset):
-#     country_list = CountrySearch().search_by_name(name, offset)
-#     return jsonify(country_list), 200
-#
-#
-# @country_blueprint.route('/search/region/<name>/<offset>', methods=['GET'])
-# def search_by_region(name, offset):
-#     country_list = CountrySearch().search_by_region(name, offset)
-#     return jsonify(country_list), 200
+def fetch_country_list_from_api():
+    url = 'https://restcountries.eu/rest/v2/all'
+    response = requests.get(url, headers={'Content-Type': 'application/json; charset=utf-8'})
+    country_list = response.json()
+    return country_list
+
+
+def store_data(country_list):
+    country_indexer_init()
+    for num, country in enumerate(country_list):
+
+        print(num + 1)
+        try:
+            create_country(country)
+        except BaseException as err:
+            print(str(err))
+            print(country['name'])
+        print()
+
+
+@country_blueprint.route('/data/load', methods=['POST'])
+def build_country_data():
+    auth_token = request.headers.get('Authorization')
+    print(auth_token)
+    if auth_token != '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d':
+        return jsonify({"message": "ERROR: Unauthorized"}), 401
+
+    country_list = fetch_country_list_from_api()
+    store_data(country_list)
+    return jsonify(country_list), 200

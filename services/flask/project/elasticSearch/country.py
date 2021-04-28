@@ -1,7 +1,6 @@
 # import requests
 from elasticsearch_dsl import Document, Long, Keyword, Text, Index
 from elasticsearch_dsl.query import MatchPhrasePrefix, Term, Bool
-# import pdb
 
 countryIndex = Index('country')
 
@@ -17,7 +16,6 @@ class CountryESModel(Document):
 
 
 def init_index():
-
     # delete the index, ignore if it doesn't exist
     countryIndex.delete(ignore=404)
     # pdb.set_trace()
@@ -51,6 +49,16 @@ class CountrySearch:
         return page_size + start_index
 
     @classmethod
+    def compute_next_page(cls, total, limit):
+        if total == 0:
+            return False
+        return limit < total
+
+    @classmethod
+    def compute_prev_page(cls, offset):
+        return int(offset) > 0
+
+    @classmethod
     def search(cls, searchInput):
         name = searchInput.get('name')  # optional field
         region = searchInput.get('region')  # optional field
@@ -73,4 +81,13 @@ class CountrySearch:
 
         s = CountryESModel.search()
         results = s[start_index:limit].query(query).execute()
-        return [country.to_dict() for country in results]
+        has_next_page = cls.compute_next_page(results.hits.total.value, limit)
+        has_previous_page = cls.compute_prev_page(start_index)
+        mapped_country_list = [country.to_dict() for country in results]
+        return {
+            "nodes": mapped_country_list,
+            "pageInfo": {
+                "hasPrevPage": has_previous_page,
+                "hasNextPage": has_next_page
+            }
+        }

@@ -3,7 +3,7 @@ import mongoengine
 from graphene.relay import Node
 from project.models.country import CountryModel
 from project.schemaTypes.country import CountryResponse, CountryNotFound
-from project.dto.country import MappedCountry
+from project.dto.country import CountryConnection
 from project.elasticSearch.country import CountrySearch
 
 
@@ -15,7 +15,7 @@ class CountryInput(graphene.InputObjectType):
 
 class Query(graphene.ObjectType):
     node = Node.Field()
-    countries = graphene.List(MappedCountry, countryInput=CountryInput(required=True))
+    countries = graphene.Field(CountryConnection, countryInput=CountryInput(required=True))
     country = graphene.Field(CountryResponse, id=graphene.String(required=True))
 
     @staticmethod
@@ -31,4 +31,4 @@ class Query(graphene.ObjectType):
             return CountryNotFound(message="Item not found")
 
 
-schema = graphene.Schema(query=Query, types=[MappedCountry, CountryResponse])
+schema = graphene.Schema(query=Query, types=[CountryConnection, CountryResponse])

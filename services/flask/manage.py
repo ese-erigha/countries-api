@@ -6,4 +6,5 @@ app = create_app()
 cli = FlaskGroup(app)
 
 if __name__ == "__main__":
+    app.debug = True
     cli()

@@ -8,8 +8,8 @@ from .graphql.schema import schema
 def create_app():
 
     """Instantiate database"""
-    # db = connect(db="countries_api_dev", host="localhost")
-    db = connect(db="countries_api_dev", host="mongodb", port=27017)
+    db = connect(db="countries_api_dev", host="localhost")
+    # db = connect(db="countries_api_dev", host="mongodb", port=27017)
     """Drop all collections"""
     # https://stackoverflow.com/questions/15886469/dropping-all-collections-in-mongoengine
     try:
@@ -18,8 +18,8 @@ def create_app():
         print(err)
 
     """Connect to ElasticSearch"""
-    # connections.create_connection(hosts=['localhost'])
-    connections.create_connection(hosts=['elasticsearch'])
+    connections.create_connection(hosts=['localhost'])
+    # connections.create_connection(hosts=['elasticsearch'])
 
     """Create Flask application."""
     app = Flask(__name__, instance_relative_config=False)

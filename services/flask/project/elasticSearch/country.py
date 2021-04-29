@@ -1,6 +1,6 @@
 # import requests
 from elasticsearch_dsl import Document, Long, Keyword, Text, Index
-from elasticsearch_dsl.query import MatchPhrasePrefix, Term, Bool
+from elasticsearch_dsl.query import MatchPhrasePrefix, Term, Bool, Match, MatchBoolPrefix
 
 countryIndex = Index('country')
 
@@ -66,17 +66,26 @@ class CountrySearch:
         limit = cls.compute_limit(start_index)
         query = ''
         if name and region is None:
-            query = MatchPhrasePrefix(name={"query": name})
+            query = Bool(
+                should=[
+                    MatchPhrasePrefix(name={"query": name}),
+                    Match(name={"query": name, "fuzziness": "AUTO"}),
+                ],
+            )
 
         if name is None and region:
             query = Term(region={"value": region})
 
         if name and region:
             query = Bool(
-                # should=[{"match": {"name": {"query": name, "fuzziness": "AUTO"}}}],
-                # should=[Match(name={"query": name, "fuzziness": "AUTO"})],
-                must=[MatchPhrasePrefix(name={"query": name})],
-                filter={"term": {"region": region}},
+                # filter={"term": {"region": region}},
+                must=[
+                    Match(name={"query": name, "fuzziness": "AUTO"}),
+                    MatchPhrasePrefix(name={"query": name}),
+                    Term(region={"value": region})
+                ],
+                # should=[Term(region={"value": region})],
+
             )
 
         s = CountryESModel.search()

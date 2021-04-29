@@ -24,8 +24,11 @@ services:
     container_name: mongodb
     volumes:
       - mongodb_data:/data/db
+      - ./docker_scripts/:/docker-entrypoint-initdb.d
     ports:
       - "27017:27017"
+    env_file:
+      - ./.env.dev
     networks:
       - backend
 

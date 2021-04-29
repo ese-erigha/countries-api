@@ -8,3 +8,4 @@ promise==2.3
 mongoengine-goodjson==1.1.8
 elasticsearch==7.10.1
 elasticsearch-dsl==7.3.0
+python-dotenv==0.17.0

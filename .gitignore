@@ -103,8 +103,8 @@ celerybeat.pid
 
 # Environments
 services/flask/project/.env
-.env.dev
-.env.prod
+env.dev
+env.prod
 .venv
 env/
 venv/

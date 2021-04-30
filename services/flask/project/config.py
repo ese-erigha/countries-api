@@ -9,21 +9,22 @@ if mode == "local":
 
 
 class Config(object):
+    DEBUG = True
     DB_NAME = getenv("MONGO_INITDB_DATABASE")
     DB_HOST = getenv("MONGO_HOST")
     DB_PORT = getenv("MONGO_PORT")
     ELASTICSEARCH_HOST = getenv("ELASTICSEARCH_HOST")
-
-
-class ProductionConfig(Config):
-    DEBUG = False
     DB_USERNAME = getenv("DATABASE_USERNAME")
     DB_PASSWORD = getenv("DATABASE_PASSWORD")
 
 
+class ProductionConfig(Config):
+    DEBUG = False
+
+
 class DevelopmentConfig(Config):
-    DEBUG = True
+    pass
 
 
 class LocalConfig(Config):
-    DEBUG = True
+    pass

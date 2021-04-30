@@ -31,17 +31,21 @@ def create_app():
     if mode == "local":
         db = connect(db=app.config["DB_NAME"], host=app.config["DB_HOST"])  # localhost
     else:
-        db = connect(db=app.config["DB_NAME"], host=app.config["DB_HOST"], port=app.config["DB_PORT"])  # docker
+        connection_string = app.config["DB_HOST"] + "://" + app.config["DB_USERNAME"] + \
+                            ":" + app.config["DB_PASSWORD"] + "@127.0.0.1:" + app.config["DB_PORT"] + "/" + \
+                            app.config["DB_NAME"] + "?authSource=" + app.config["DB_NAME"]
+        db = connect(host=connection_string)  # docker
     # db = connect(db="countries_api_dev", host="mongodb", port=27017)
 
     """Drop all collections"""
-
     # https://stackoverflow.com/questions/15886469/dropping-all-collections-in-mongoengine
-    # try:
-    #     # db.drop_database("countries_api_dev")
-    #     db.drop_database(app.config["DB_NAME"])
-    # except BaseException as err:
-    #     print(err)
+    try:
+        db.drop_collection("country")
+        db.drop_collection("todo")
+        # db.drop_database("countries_api_dev")
+        # db.drop_database(app.config["DB_NAME"])
+    except BaseException as err:
+        print(err)
 
     """Connect to ElasticSearch"""
     connections.create_connection(hosts=[app.config["ELASTICSEARCH_HOST"]])

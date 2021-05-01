@@ -1,6 +1,7 @@
 # import requests
+import elasticsearch
 from elasticsearch_dsl import Document, Long, Keyword, Text, Index
-from elasticsearch_dsl.query import MatchPhrasePrefix, Term, Bool, Match, MatchBoolPrefix
+from elasticsearch_dsl.query import MatchPhrasePrefix, Term, Bool, Match
 
 countryIndex = Index('country')
 
@@ -59,11 +60,7 @@ class CountrySearch:
         return int(offset) > 0
 
     @classmethod
-    def search(cls, searchInput):
-        name = searchInput.get('name')  # optional field
-        region = searchInput.get('region')  # optional field
-        start_index = searchInput.get('offset')
-        limit = cls.compute_limit(start_index)
+    def build_query(cls, name, region):
         query = ''
         if name and region is None:
             query = Bool(
@@ -88,6 +85,15 @@ class CountrySearch:
 
             )
 
+        return query
+
+    @classmethod
+    def search(cls, searchInput):
+        name = searchInput.get('name')  # optional field
+        region = searchInput.get('region')  # optional field
+        start_index = searchInput.get('offset')
+        limit = cls.compute_limit(start_index)
+        query = cls.build_query(name, region)
         s = CountryESModel.search()
         results = s[start_index:limit].query(query).execute()
         has_next_page = cls.compute_next_page(results.hits.total.value, limit)

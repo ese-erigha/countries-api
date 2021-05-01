@@ -18,3 +18,12 @@ class MappedCountry(graphene.ObjectType):
 class CountryConnection(graphene.ObjectType):
     nodes = graphene.List(MappedCountry)
     pageInfo = graphene.Field(PageInfo)
+
+
+class CountrySearchError(graphene.ObjectType):
+    message = graphene.String()
+
+
+class CountrySearchResponse(graphene.Union):
+    class Meta:
+        types = (CountryConnection, CountrySearchError)

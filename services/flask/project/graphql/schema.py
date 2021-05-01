@@ -1,9 +1,10 @@
+import elasticsearch
 import graphene
 import mongoengine
 from graphene.relay import Node
 from project.models.country import CountryModel
 from project.schemaTypes.country import CountryResponse, CountryNotFound
-from project.dto.country import CountryConnection
+from project.dto.country import CountrySearchResponse, CountrySearchError
 from project.elasticSearch.country import CountrySearch
 
 
@@ -15,20 +16,22 @@ class CountryInput(graphene.InputObjectType):
 
 class Query(graphene.ObjectType):
     node = Node.Field()
-    countries = graphene.Field(CountryConnection, countryInput=CountryInput(required=True))
+    countries = graphene.Field(CountrySearchResponse, countryInput=CountryInput(required=True))
     country = graphene.Field(CountryResponse, id=graphene.String(required=True))
 
     @staticmethod
     def resolve_countries(_, _info, countryInput):
-        return CountrySearch().search(countryInput)
+        try:
+            return CountrySearch().search(countryInput)
+        except elasticsearch.ElasticsearchException as err:
+            return CountrySearchError(message=str(err))
 
     @staticmethod
     def resolve_country(_, _info, id):
-        print(id)
         try:
             return CountryModel.objects().get(id=id)
         except mongoengine.DoesNotExist:
             return CountryNotFound(message="Item not found")
 
 
-schema = graphene.Schema(query=Query, types=[CountryConnection, CountryResponse])
+schema = graphene.Schema(query=Query, types=[CountrySearchResponse, CountryResponse])

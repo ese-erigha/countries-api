@@ -31,26 +31,23 @@ def create_app():
     if mode == "local":
         db = connect(db=app.config["DB_NAME"], host=app.config["DB_HOST"])  # localhost
     else:
-        connection_string = app.config["DB_HOST"] + "://" + app.config["DB_USERNAME"] + \
-                            ":" + app.config["DB_PASSWORD"] + "@127.0.0.1:" + app.config["DB_PORT"] + "/" + \
-                            app.config["DB_NAME"] + "?authSource=" + app.config["DB_NAME"]
-        db = connect(host=connection_string)  # docker
-    # db = connect(db="countries_api_dev", host="mongodb", port=27017)
+        connection_string = "mongodb://{username}:{password}@{host}:{port}/{db_name}?authSource=admin". \
+            format(username=app.config["DB_USERNAME"], password=app.config["DB_PASSWORD"], host=app.config["DB_HOST"],
+                   port=app.config["DB_PORT"], db_name=app.config["DB_NAME"])
+        db = connect(host=connection_string)
 
     """Drop all collections"""
     # https://stackoverflow.com/questions/15886469/dropping-all-collections-in-mongoengine
-    try:
-        db.drop_collection("country")
-        db.drop_collection("todo")
-        # db.drop_database("countries_api_dev")
-        # db.drop_database(app.config["DB_NAME"])
-    except BaseException as err:
-        print(err)
+    # try:
+    #     db.drop_collection("country")
+    #     db.drop_collection("todo")
+    #     # db.drop_database("countries_api_dev")
+    #     # db.drop_database(app.config["DB_NAME"])
+    # except BaseException as err:
+    #     print(err)
 
     """Connect to ElasticSearch"""
     connections.create_connection(hosts=[app.config["ELASTICSEARCH_HOST"]])
-    # connections.create_connection(hosts=['localhost'])  # localhost
-    # connections.create_connection(hosts=['elasticsearch']) # docker
 
     with app.app_context():
         # Include our Routes

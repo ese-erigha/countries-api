@@ -30,13 +30,15 @@ services:
       - backend
 
   mongodb:
-    image: mongo
+    image: mongo:4.4
     container_name: mongodb
     volumes:
       - mongodb_data:/data/db
-      - ./docker_scripts/:/docker-entrypoint-initdb.d
-    ports:
-      - "27017:27017"
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+    expose:
+      - "27017"
+#    ports:
+#      - "27017:27017"
     env_file:
       - env.dev
     environment:
@@ -98,9 +100,12 @@ services:
         hard: -1
     volumes:
       - esdata:/usr/share/elasticsearch/data
-    ports:
-      - "9205:9200" #only accessible within the host; cannot be accessed publicly
-      - "9305:9300"
+    expose:
+      - "9200"
+      - "9300"
+#    ports:
+#      - "9205:9200" #only accessible within the host; cannot be accessed publicly
+#      - "9305:9300"
     networks:
       - backend
 

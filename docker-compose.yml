@@ -13,6 +13,7 @@ services:
     env_file:
       - env.dev
     environment:
+      - MODE=${MODE}
       - MONGO_HOST=${MONGO_HOST}
       - MONGO_PORT=${MONGO_PORT}
       - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
@@ -21,7 +22,8 @@ services:
       - DATABASE_USERNAME=${DATABASE_USERNAME}
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST}
-      - MODE=${MODE}
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
     depends_on:
       - mongodb
       - elasticsearch
@@ -34,11 +36,8 @@ services:
     container_name: mongodb
     volumes:
       - mongodb_data:/data/db
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
     expose:
       - "27017"
-#    ports:
-#      - "27017:27017"
     env_file:
       - env.dev
     environment:

@@ -47,7 +47,14 @@ def create_app():
     #     print(err)
 
     """Connect to ElasticSearch"""
-    connections.create_connection(hosts=[app.config["ELASTICSEARCH_HOST"]])
+    elastic_host = app.config["ELASTICSEARCH_HOST"]
+
+    if mode == "local":
+        connections.create_connection(hosts=[elastic_host])
+    else:
+        elastic_auth = "{username}:{password}".format(username=app.config["ELASTIC_USERNAME"],
+                                                      password=app.config["ELASTIC_PASSWORD"])
+        connections.create_connection(hosts=[elastic_host], http_auth=elastic_auth)
 
     with app.app_context():
         # Include our Routes

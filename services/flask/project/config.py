@@ -23,7 +23,8 @@ class ProductionConfig(Config):
 
 
 class DevelopmentConfig(Config):
-    pass
+    ELASTIC_USERNAME = getenv("ELASTIC_USERNAME")
+    ELASTIC_PASSWORD = getenv("ELASTIC_PASSWORD")
 
 
 class LocalConfig(Config):

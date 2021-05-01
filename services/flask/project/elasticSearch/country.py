@@ -1,7 +1,6 @@
-# import requests
-import elasticsearch
 from elasticsearch_dsl import Document, Long, Keyword, Text, Index
 from elasticsearch_dsl.query import MatchPhrasePrefix, Term, Bool, Match
+from project.dto.country import CountryConnection
 
 countryIndex = Index('country')
 
@@ -19,7 +18,6 @@ class CountryESModel(Document):
 def init_index():
     # delete the index, ignore if it doesn't exist
     countryIndex.delete(ignore=404)
-    # pdb.set_trace()
 
     countryIndex.settings(number_of_shards=1)
     countryIndex.create()
@@ -75,14 +73,11 @@ class CountrySearch:
 
         if name and region:
             query = Bool(
-                # filter={"term": {"region": region}},
                 must=[
                     Match(name={"query": name, "fuzziness": "AUTO"}),
                     MatchPhrasePrefix(name={"query": name}),
                     Term(region={"value": region})
                 ],
-                # should=[Term(region={"value": region})],
-
             )
 
         return query
@@ -99,10 +94,8 @@ class CountrySearch:
         has_next_page = cls.compute_next_page(results.hits.total.value, limit)
         has_previous_page = cls.compute_prev_page(start_index)
         mapped_country_list = [country.to_dict() for country in results]
-        return {
-            "nodes": mapped_country_list,
-            "pageInfo": {
+        page_info = {
                 "hasPrevPage": has_previous_page,
                 "hasNextPage": has_next_page
-            }
         }
+        return CountryConnection(nodes=mapped_country_list, pageInfo=page_info)

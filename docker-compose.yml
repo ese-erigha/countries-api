@@ -14,6 +14,7 @@ services:
       - env.dev
     environment:
       - MODE=${MODE}
+      - AUTH_TOKEN=${AUTH_TOKEN}
       - MONGO_HOST=${MONGO_HOST}
       - MONGO_PORT=${MONGO_PORT}
       - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}

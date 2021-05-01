@@ -39,10 +39,7 @@ def create_app():
     """Drop all collections"""
     # https://stackoverflow.com/questions/15886469/dropping-all-collections-in-mongoengine
     # try:
-    #     db.drop_collection("country")
-    #     db.drop_collection("todo")
-    #     # db.drop_database("countries_api_dev")
-    #     # db.drop_database(app.config["DB_NAME"])
+    #     db.drop_database(app.config["DB_NAME"])
     # except BaseException as err:
     #     print(err)
 

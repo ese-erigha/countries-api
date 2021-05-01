@@ -16,6 +16,7 @@ class Config(object):
     ELASTICSEARCH_HOST = getenv("ELASTICSEARCH_HOST")
     DB_USERNAME = getenv("MONGO_INITDB_ROOT_USERNAME")
     DB_PASSWORD = getenv("MONGO_INITDB_ROOT_PASSWORD")
+    AUTH_TOKEN = getenv("AUTH_TOKEN")
 
 
 class ProductionConfig(Config):

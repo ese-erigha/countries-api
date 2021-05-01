@@ -1,6 +1,8 @@
 import json
 import requests
 from flask import Blueprint, jsonify, request, current_app as app
+
+from project.models.country import CountryModel
 from project.services.country import save_country
 from project.elasticSearch.country import index_country, init_index as country_indexer_init
 
@@ -39,9 +41,12 @@ def store_data(country_list):
 @country_blueprint.route('/data/load', methods=['POST'])
 def build_country_data():
     auth_token = request.headers.get('Authorization')
-    print(auth_token)
     if auth_token != app.config["AUTH_TOKEN"]:
         return jsonify({"message": "ERROR: Unauthorized"}), 401
+
+    num_of_country = CountryModel.objects.count()
+    if num_of_country == 250:
+        return jsonify({"message": "Data already exists"}), 200
 
     country_list = fetch_country_list_from_api()
     store_data(country_list)

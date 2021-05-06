@@ -1,5 +1,5 @@
 from elasticsearch_dsl import Document, Long, Keyword, Text, Index
-from elasticsearch_dsl.query import MatchPhrasePrefix, Term, Bool, Match
+from elasticsearch_dsl.query import MatchPhrasePrefix, Term, Bool, Match, MatchAll
 from project.dto.country import CountryConnection
 
 countryIndex = Index('country')
@@ -13,6 +13,7 @@ class CountryESModel(Document):
     capital = Text()
     population = Long()
     region = Keyword()
+    flag = Text()
 
 
 def init_index():
@@ -31,7 +32,8 @@ def index_country(data):
         alpha2Code=data['alpha2Code'],
         capital=data['capital'],
         population=data['population'],
-        region=data['region']
+        region=data['region'],
+        flag=data['flag']
     ).save()
 
     # refresh index manually to make changes live
@@ -59,7 +61,7 @@ class CountrySearch:
 
     @classmethod
     def build_query(cls, name, region):
-        query = ''
+        query = MatchAll()
         if name and region is None:
             query = Bool(
                 should=[
@@ -89,13 +91,13 @@ class CountrySearch:
         start_index = searchInput.get('offset')
         limit = cls.compute_limit(start_index)
         query = cls.build_query(name, region)
-        s = CountryESModel.search()
+        s = CountryESModel.search().sort({"name": {"order": "asc"}})
         results = s[start_index:limit].query(query).execute()
         has_next_page = cls.compute_next_page(results.hits.total.value, limit)
         has_previous_page = cls.compute_prev_page(start_index)
         mapped_country_list = [country.to_dict() for country in results]
         page_info = {
-                "hasPrevPage": has_previous_page,
-                "hasNextPage": has_next_page
+            "hasPrevPage": has_previous_page,
+            "hasNextPage": has_next_page
         }
         return CountryConnection(nodes=mapped_country_list, pageInfo=page_info)

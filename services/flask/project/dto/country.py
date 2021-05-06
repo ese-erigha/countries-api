@@ -13,6 +13,7 @@ class MappedCountry(graphene.ObjectType):
     capital = graphene.String()
     population = graphene.Int()
     region = graphene.String()
+    flag = graphene.String()
 
 
 class CountryConnection(graphene.ObjectType):

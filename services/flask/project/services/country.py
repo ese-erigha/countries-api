@@ -3,6 +3,7 @@ from project.models.currency import CurrencyModel
 from project.models.language import LanguageModel
 from project.models.regionBloc import RegionBlocModel
 from project.models.translation import TranslationModel
+import uuid
 
 
 def map_field_list_to_dict(field_list, data):
@@ -74,5 +75,6 @@ def save_country(data):
             data[field],
         )
     country.translations = TranslationModel(**data['translations'])
+    country.metaId = uuid.uuid4().hex
     country_item = country.save()
     return country_item.to_json()

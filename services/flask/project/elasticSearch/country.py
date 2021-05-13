@@ -9,6 +9,7 @@ countryIndex = Index('country')
 class CountryESModel(Document):
     id = Keyword()
     name = Text(fields={'raw': Keyword()})
+    metaId = Keyword()
     alpha2Code = Keyword()
     capital = Text()
     population = Long()
@@ -28,6 +29,7 @@ def index_country(data):
     CountryESModel(
         meta={'id': data['id']},
         id=data['id'],
+        metaId=data['metaId'],
         name=data['name'],
         alpha2Code=data['alpha2Code'],
         capital=data['capital'],
@@ -91,7 +93,7 @@ class CountrySearch:
         start_index = searchInput.get('offset')
         limit = cls.compute_limit(start_index)
         query = cls.build_query(name, region)
-        # s = CountryESModel.search().sort({"name": {"order": "asc"}})
+        # s = CountryESModel.search().sort({"name.raw": {"order": "asc"}})
         s = CountryESModel.search()
         results = s[start_index:limit].query(query).execute()
         has_next_page = cls.compute_next_page(results.hits.total.value, limit)

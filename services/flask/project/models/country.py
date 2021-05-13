@@ -8,7 +8,8 @@ from .translation import TranslationModel
 
 
 class CountryModel(gj.Document):
-    meta = {'collection': 'country'}
+    meta = {'collection': 'country', 'indexes': ['metaId']}
+    metaId = StringField(required=True, unique=True)
     alpha2Code = StringField(required=True, unique=True)
     alpha3Code = StringField()
     altSpellings = ListField(StringField())

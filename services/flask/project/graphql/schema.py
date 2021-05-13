@@ -29,7 +29,7 @@ class Query(graphene.ObjectType):
     @staticmethod
     def resolve_country(_, _info, id):
         try:
-            return CountryModel.objects().get(id=id)
+            return CountryModel.objects().get(metaId=id)
         except mongoengine.DoesNotExist:
             return CountryNotFound(message="Item not found")
 

@@ -9,6 +9,7 @@ class PageInfo(graphene.ObjectType):
 class MappedCountry(graphene.ObjectType):
     id = graphene.String()
     name = graphene.String()
+    metaId = graphene.String()
     alpha2Code = graphene.String()
     capital = graphene.String()
     population = graphene.Int()

@@ -48,7 +48,7 @@ class CountrySearch:
 
     @classmethod
     def compute_limit(cls, start_index):
-        page_size = 10
+        page_size = 12
         return page_size + start_index
 
     @classmethod

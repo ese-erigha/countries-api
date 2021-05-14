@@ -4,6 +4,9 @@ import graphene
 from graphene.relay import Node
 from graphene_mongo import MongoengineObjectType
 from project.models.country import CountryModel
+from project.models.currency import CurrencyModel
+from project.models.language import LanguageModel
+from project.models.translation import TranslationModel
 
 
 class CountryNotFound(graphene.ObjectType):
@@ -15,6 +18,21 @@ class CountryLoader(DataLoader):
     def batch_load_fn(cls, keys):
         countries = {country.alpha3Code: country for country in CountryModel.objects(alpha3Code__in=keys)}
         return Promise.resolve([countries.get(key) for key in keys])
+
+
+class Currency(MongoengineObjectType):
+    class Meta:
+        model = CurrencyModel
+
+
+class Language(MongoengineObjectType):
+    class Meta:
+        model = LanguageModel
+
+
+class Translation(MongoengineObjectType):
+    class Meta:
+        model = TranslationModel
 
 
 class Country(MongoengineObjectType):

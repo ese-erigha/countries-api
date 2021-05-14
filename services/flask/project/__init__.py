@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from flask_cors import CORS
 from mongoengine import connect
 from flask_graphql import GraphQLView
 from elasticsearch_dsl.connections import connections
@@ -56,6 +57,9 @@ def create_app():
     with app.app_context():
         # Include our Routes
         from .routes.country import country_blueprint
+
+        cors = CORS()
+        cors.init_app(app, origins=["*"])
 
         # Register Blueprints
         app.register_blueprint(country_blueprint, url_prefix='/country')

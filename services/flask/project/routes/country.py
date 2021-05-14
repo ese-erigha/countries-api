@@ -1,6 +1,7 @@
 import json
 import requests
 from flask import Blueprint, jsonify, request, current_app as app
+# from flask_cors import CORS
 
 from project.models.country import CountryModel
 from project.services.country import save_country
@@ -10,6 +11,7 @@ from project.elasticSearch.country import index_country, init_index as country_i
 country_blueprint = Blueprint(
     'country_blueprint', __name__,
 )
+# CORS(country_blueprint)
 
 
 def create_country(country_data):

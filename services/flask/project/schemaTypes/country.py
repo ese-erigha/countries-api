@@ -6,6 +6,7 @@ from graphene_mongo import MongoengineObjectType
 from project.models.country import CountryModel
 from project.models.currency import CurrencyModel
 from project.models.language import LanguageModel
+from project.models.regionBloc import RegionBlocModel
 from project.models.translation import TranslationModel
 
 
@@ -33,6 +34,11 @@ class Language(MongoengineObjectType):
 class Translation(MongoengineObjectType):
     class Meta:
         model = TranslationModel
+
+
+class RegionBloc(MongoengineObjectType):
+    class Meta:
+        model = RegionBlocModel
 
 
 class Country(MongoengineObjectType):

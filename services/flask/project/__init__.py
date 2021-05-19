@@ -5,6 +5,8 @@ from flask_cors import CORS
 from mongoengine import connect
 from flask_graphql import GraphQLView
 from elasticsearch_dsl.connections import connections
+
+from .graphql.middleware import build_middleware
 from .graphql.schema import schema
 from .config import ProductionConfig, DevelopmentConfig, LocalConfig
 
@@ -16,7 +18,7 @@ def create_app():
 
     app.add_url_rule(
         '/graphql',
-        view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True)
+        view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True, middleware=build_middleware())
     )
 
     mode = os.getenv("MODE")

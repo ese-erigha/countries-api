@@ -1,6 +1,6 @@
 from elasticsearch_dsl import Document, Long, Keyword, Text, Index
-from elasticsearch_dsl.query import MatchPhrasePrefix, Term, Bool, Match, MatchAll
 from project.dto.country import CountryConnection
+from project.elasticSearch.query_builder import QueryBuilder
 
 countryIndex = Index('country')
 
@@ -52,55 +52,25 @@ class CountrySearch:
         return page_size + start_index
 
     @classmethod
-    def compute_next_page(cls, total, limit):
+    def has_next_page(cls, total, limit):
         if total == 0:
             return False
         return limit < total
 
     @classmethod
-    def compute_prev_page(cls, offset):
+    def has_prev_page(cls, offset):
         return int(offset) > 0
 
     @classmethod
-    def build_query(cls, name, region):
-        query = MatchAll()
-        if name and region is None:
-            query = Bool(
-                should=[
-                    MatchPhrasePrefix(name={"query": name}),
-                    Match(name={"query": name, "fuzziness": "AUTO"}),
-                ],
-            )
-
-        if name is None and region:
-            query = Term(region={"value": region})
-
-        if name and region:
-            query = Bool(
-                must=[
-                    Match(name={"query": name, "fuzziness": "AUTO"}),
-                    MatchPhrasePrefix(name={"query": name}),
-                    Term(region={"value": region})
-                ],
-            )
-
-        return query
-
-    @classmethod
     def search(cls, searchInput):
-        name = searchInput.get('name')  # optional field
-        region = searchInput.get('region')  # optional field
         start_index = searchInput.get('offset')
         limit = cls.compute_limit(start_index)
-        query = cls.build_query(name, region)
-        # s = CountryESModel.search().sort({"name.raw": {"order": "asc"}})
+        query = QueryBuilder(searchInput).build()
         s = CountryESModel.search()
         results = s[start_index:limit].query(query).execute()
-        has_next_page = cls.compute_next_page(results.hits.total.value, limit)
-        has_previous_page = cls.compute_prev_page(start_index)
         mapped_country_list = [country.to_dict() for country in results]
         page_info = {
-            "hasPrevPage": has_previous_page,
-            "hasNextPage": has_next_page
+            "hasPrevPage": cls.has_prev_page(start_index),
+            "hasNextPage": cls.has_next_page(results.hits.total.value, limit)
         }
         return CountryConnection(nodes=mapped_country_list, pageInfo=page_info)

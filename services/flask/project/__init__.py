@@ -39,13 +39,6 @@ def create_app():
                    port=app.config["DB_PORT"], db_name=app.config["DB_NAME"])
         db = connect(host=connection_string)
 
-    """Drop all collections"""
-    # https://stackoverflow.com/questions/15886469/dropping-all-collections-in-mongoengine
-    # try:
-    #     db.drop_database(app.config["DB_NAME"])
-    # except BaseException as err:
-    #     print(err)
-
     """Connect to ElasticSearch"""
     elastic_host = app.config["ELASTICSEARCH_HOST"]
 

@@ -102,9 +102,9 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-services/flask/project/local.env
-dev.env
-prod.env
+services/flask/project/env.local
+env.dev
+env.prod
 .venv
 env/
 venv/

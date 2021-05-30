@@ -5,7 +5,7 @@ basedir = path.abspath(path.dirname(__file__))
 
 mode = getenv("MODE")
 if mode == "local":
-    load_dotenv(path.join(basedir, '.env.local'))
+    load_dotenv(path.join(basedir, 'env.local'))
 
 
 class Config(object):

@@ -12,7 +12,7 @@ services:
       - ./secrets:/secrets
       - ./setup/:/setup/
     env_file:
-      - dev.env
+      - env.dev
     environment:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
   certs:
@@ -26,6 +26,6 @@ services:
       - ./secrets:/secrets
       - ./setup/:/setup/
     env_file:
-      - dev.env
+      - env.dev
     environment:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}

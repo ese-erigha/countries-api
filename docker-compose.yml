@@ -11,7 +11,7 @@ services:
     ports: 
       - "5000:5000"
     env_file:
-      - dev.env
+      - env.dev
     environment:
       - MODE=${MODE}
       - AUTH_TOKEN=${AUTH_TOKEN}
@@ -40,7 +40,7 @@ services:
     expose:
       - "27017"
     env_file:
-      - dev.env
+      - env.dev
     environment:
       - MONGO_HOST=${MONGO_HOST}
       - MONGO_PORT=${MONGO_PORT}
@@ -58,7 +58,7 @@ services:
     ports:
       - "8085:8081"
     env_file:
-      - dev.env
+      - env.dev
     environment:
       - ME_CONFIG_BASICAUTH_USERNAME=${DATABASE_USERNAME}
       - ME_CONFIG_BASICAUTH_PASSWORD=${DATABASE_PASSWORD}
@@ -92,7 +92,7 @@ services:
       args:
         ELK_VERSION: ${ELK_VERSION}
     env_file:
-      - dev.env
+      - env.dev
     environment:
       ELASTIC_USERNAME: ${ELASTIC_USERNAME}
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
@@ -134,7 +134,7 @@ services:
     depends_on:
       - elasticsearch
     env_file:
-      - dev.env
+      - env.dev
     environment:
       ELASTIC_USERNAME: ${ELASTIC_USERNAME}
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
@@ -156,7 +156,7 @@ services:
     depends_on:
       - elasticsearch
     env_file:
-      - dev.env
+      - env.dev
     environment:
       ELASTIC_USERNAME: ${ELASTIC_USERNAME}
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}

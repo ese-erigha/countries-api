@@ -5,10 +5,10 @@ services:
     image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/flask-api
     build:
       context:  ./services/flask
-    container_name: flask_api # Do not use when in a swarm; cannot scale a service beyond 1 container if you have specified a custom name
+#    container_name: flask_api # Do not use when in a swarm; cannot scale a service beyond 1 container if you have specified a custom name
     volumes:
       - ./services/flask/:/usr/src/app/
-    ports: 
+    ports:
       - "5000:5000"
     env_file:
       - env.prod
@@ -33,10 +33,7 @@ services:
       - backend
 
   mongodb:
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/mongodb
-    container_name: mongodb
-    build:
-      context: mongodb/
+    image: mongo:4.4
     volumes:
       - mongodb_data:/data/db
     expose:
@@ -55,10 +52,7 @@ services:
       - backend
 
   mongo_express:
-    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/mongo-express
-    container_name: mongo_express
-    build:
-      context: mongo-express/
+    image: mongo-express
     ports:
       - "8085:8081"
     env_file:
@@ -77,10 +71,9 @@ services:
 
   nginx:
     image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/nginx
-    container_name: nginx
     build:
-      context:  nginx/
-    ports: 
+      context:  ./services/nginx
+    ports:
       - "80:80"
       - "443:443"
     depends_on:
@@ -91,7 +84,6 @@ services:
 
   elasticsearch:
     image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/elasticsearch
-    container_name: elasticsearch
     build:
       context: elasticsearch/
       args:
@@ -130,7 +122,6 @@ services:
 
   kibana:
     image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/kibana
-    container_name: kibana
     build:
       context: kibana/
       args:
@@ -152,7 +143,6 @@ services:
 
   logstash:
     image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/logstash
-    container_name: logstash
     build:
       context: logstash/
       args:

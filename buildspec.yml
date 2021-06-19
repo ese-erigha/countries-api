@@ -24,4 +24,4 @@ phases:
       - docker-compose --file=docker-compose.prod.yml --env-file=env.prod push
 artifacts:
   files:
-    - 'Dockerrun.aws.json'
+    - 'taskdef.json'

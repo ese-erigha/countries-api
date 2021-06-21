@@ -12,4 +12,5 @@ class HideIntrospectMiddleware:
 
 
 def build_middleware():
-    return [HideIntrospectMiddleware()]
+    return []
+    # return [HideIntrospectMiddleware()]

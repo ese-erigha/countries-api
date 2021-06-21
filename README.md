@@ -59,6 +59,12 @@ Run services
 docker-compose --f docker-compose.yml --env-file env.dev up  --build
 ```
 
+Load data via POST REQUEST
+```
+HEADERS = {Authorization: <auth token from dev.env config>}
+http://localhost:500/country/data/load
+```
+
 View API Schema
 ```
 http://localhost:500/graphql

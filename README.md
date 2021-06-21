@@ -27,8 +27,8 @@ Development:
 ## Getting Started
 
 ### Prerequisites
-Install [Docker](https://docs.docker.com/get-docker/)
-Install [Docker-Compose](https://docs.docker.com/compose/install/)
+* Install [Docker](https://docs.docker.com/get-docker/)
+* Install [Docker-Compose](https://docs.docker.com/compose/install/)
 
 ### Installing
 Clone the repository
